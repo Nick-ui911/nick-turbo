@@ -27,4 +27,4 @@ jobs:
           context: .  # Set the Docker build context to the root of the repo
           file: ./docker/DockerFile.backend  # Path to the Dockerfile for the backend
           push: true  # Push the image to DockerHub after build
-          tags: 100xdevs/todo-app-backend:${{ github.sha }}  # Image tag includes GitHub commit SHA for uniqueness
+          tags: nick1120/todo-app-backend:${{ github.sha }}  # Image tag includes GitHub commit SHA for uniqueness
