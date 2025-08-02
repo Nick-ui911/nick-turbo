@@ -1,0 +1,30 @@
+# Name of the GitHub Actions workflow (shown in GitHub UI)
+name: CD Backend
+
+# Trigger this workflow on push to the main branch
+on:
+  push:
+    branches:
+      - main  # Only run when changes are pushed to the main branch
+
+jobs:
+  build-and-deploy:  # Name of the job
+    runs-on: ubuntu-latest  # Use the latest Ubuntu runner for this job
+
+    steps:
+      - name: Checkout the code  # Step 1: Checkout the code from the repo
+        uses: actions/checkout@v2  # Official GitHub Action to fetch source code
+
+      - name: Docker login  # Step 2: Login to DockerHub using secrets
+        uses: docker/login-action@v2  # GitHub Action to login to Docker registry
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}  # DockerHub username from GitHub Secrets
+          password: ${{ secrets.DOCKERHUB_TOKEN }}     # DockerHub token/password from GitHub Secrets
+
+      - name: Build and push Docker image  # Step 3: Build Docker image and push it to DockerHub
+        uses: docker/build-push-action@v4  # GitHub Action to build and optionally push Docker images
+        with:
+          context: .  # Set the Docker build context to the root of the repo
+          file: ./docker/Dockerfile.backend  # Path to the Dockerfile for the backend
+          push: true  # Push the image to DockerHub after build
+          tags: 100xdevs/todo-app-backend:${{ github.sha }}  # Image tag includes GitHub commit SHA for uniqueness
